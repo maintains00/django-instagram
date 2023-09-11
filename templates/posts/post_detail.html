@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}글 상세{% endblock %}
+
+{% block content %}
+<h1>Post 상세 화면</h1>
+<div class="card-list">
+    {% include 'minin/posts/post_card.html'%}
+</div>
+{% endblock %}

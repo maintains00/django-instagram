@@ -3,6 +3,8 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
 from posts.models import Post
+from posts.forms import PostBaseForm, PostCreateForm
+
 
 def index(request):
     post_list = Post.objects.all().order_by('-created_at') # Post 전체 데이터 조회
@@ -33,6 +35,24 @@ def post_create_view(request):
             content=content,
             writer=request.user
         )
+        return redirect('index')
+
+# form 사용
+def post_create_form_view(request):
+    if request.method == 'GET':
+        form = PostCreateForm()
+        return render(request, 'posts/post_form2.html', {'form' : form})
+    else:
+        form = PostCreateForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            Post.objects.create(
+                image = form.cleaned_data['image'],
+                content = form.cleaned_data['content'],
+                writer = request.user
+            )
+        else:
+            return redirect('posts:post-create')
         return redirect('index')
 
 def post_detail_view(request, id):
